@@ -1,0 +1,20 @@
+{
+  "name": "dear-aesu-api",
+  "version": "1.0.0",
+  "description": "Claude API integration for Dear Aesu skincare advisor",
+  "main": "index.js",
+  "dependencies": {
+    "node-fetch": "^3.3.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "skincare",
+    "ai",
+    "claude",
+    "netlify"
+  ],
+  "author": "",
+  "license": "ISC"
+}
