@@ -1,5 +1,5 @@
 // Serverless function to handle Claude API requests
-exports.handler = async function(event, context) {
+module.exports.handler = async function(event, context) {
   // Reject non-POST requests
   if (event.httpMethod !== "POST") {
     return { statusCode: 405, body: "Method Not Allowed" };
