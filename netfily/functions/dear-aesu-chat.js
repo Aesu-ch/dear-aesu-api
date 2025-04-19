@@ -1,5 +1,5 @@
 // Chat history for context 
-let chatHistory = [];
+let chatHistory = []; 
   
 // Function to generate AI response using Claude API
 async function generateResponse(userInput) {
