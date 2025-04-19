@@ -1,4 +1,4 @@
-// Chat history for context
+// Chat history for context 
 let chatHistory = [];
   
 // Function to generate AI response using Claude API
