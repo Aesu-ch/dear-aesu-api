@@ -1,5 +1,5 @@
 // At the top of your file
-const fetch = require('node-fetch');
+import fetch from 'node-fetch';
 
 // Serverless function to handle Claude API requests
 exports.handler = async function(event, context) {
