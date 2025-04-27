@@ -180,7 +180,7 @@ Be friendly, professional, and empathetic. Use a warm, conversational tone while
         "anthropic-version": "2023-06-01"
       },
       body: JSON.stringify({
-        model: "claude-3-haiku-20240307",  // You can change to Opus or Sonnet for higher quality
+        model: "claude-3-7-sonnet-20250219",  // You can change to Opus or Sonnet for higher quality
         max_tokens: 1000,
         messages: messages,
         temperature: 0.7
