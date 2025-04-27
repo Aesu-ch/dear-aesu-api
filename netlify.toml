@@ -1,5 +1,5 @@
 [build]
-   functions = "functions"
+  functions = "functions"
 
 [functions]
   node_bundler = "esbuild"
@@ -7,7 +7,7 @@
   
 [[headers]]
   for = "/*"
-    [headers.values]
+  [headers.values]
     Access-Control-Allow-Origin = "*"
     Access-Control-Allow-Methods = "GET, POST, OPTIONS"
     Access-Control-Allow-Headers = "Content-Type"
