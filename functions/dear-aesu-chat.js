@@ -1,8 +1,10 @@
-// At the top of your file
-import fetch from 'node-fetch';
+// Using CommonJS require instead of import
+const fetch = require('node-fetch');
 
 // Serverless function to handle Claude API requests
 exports.handler = async function(event, context) {
+  console.log("Function started");
+  
   // Handle OPTIONS request for CORS preflight
   if (event.httpMethod === "OPTIONS") {
     return {
@@ -23,6 +25,7 @@ exports.handler = async function(event, context) {
 
   try {
     // Parse the request body
+    console.log("Request body:", event.body);
     const data = JSON.parse(event.body);
     const { message, history, skinConcerns, skinType } = data;
 
@@ -148,12 +151,12 @@ For each product recommendation, provide 2-3 options that suit the user's skin t
   <price>$XX.XX</price>
 </product>
 
-Be friendly, professional, and empathetic. Use a warm, conversational tone while maintaining your expertise. Always be concise and do not overwhelm the user with too much information. If the user seems confused, simplify your explanations and provide educational information in digestible amounts. Do not answer any question not related to skincare. Do not recommend any other shop that aesu.ch;
-`
+Be friendly, professional, and empathetic. Use a warm, conversational tone while maintaining your expertise. Always be concise and do not overwhelm the user with too much information. If the user seems confused, simplify your explanations and provide educational information in digestible amounts. Do not answer any question not related to skincare. Do not recommend any other shop that aesu.ch;`;
+
     // Construct messages array for Claude
     const messages = [
       { role: "system", content: systemPrompt },
-      ...history || [],
+      ...(history || []),
       { role: "user", content: message }
     ];
 
@@ -167,6 +170,7 @@ Be friendly, professional, and empathetic. Use a warm, conversational tone while
       messages.push({ role: "system", content: contextMessage });
     }
 
+    console.log("Making request to Anthropic API");
     // Make request to Anthropic API
     const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
@@ -188,19 +192,26 @@ Be friendly, professional, and empathetic. Use a warm, conversational tone while
       console.error("Anthropic API error:", errorData);
       return { 
         statusCode: response.status, 
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type"
+        },
         body: JSON.stringify({ error: "Error communicating with AI service" }) 
       };
     }
 
     const responseData = await response.json();
+    console.log("API response received successfully");
     
     return {
       statusCode: 200,
       headers: {
          "Content-Type": "application/json",
-         "Access-Control-Allow-Origin": "*", // This allows requests from any domain
-         "Access-Control-Allow-Methods": "GET, POST, OPTIONS", // Allow these HTTP methods
-         "Access-Control-Allow-Headers": "Content-Type" // Allow these headers
+         "Access-Control-Allow-Origin": "*", 
+         "Access-Control-Allow-Methods": "GET, POST, OPTIONS", 
+         "Access-Control-Allow-Headers": "Content-Type" 
       },
       body: JSON.stringify({
         message: responseData.content[0].text,
@@ -211,7 +222,13 @@ Be friendly, professional, and empathetic. Use a warm, conversational tone while
     console.error("Function error:", error);
     return { 
       statusCode: 500, 
-      body: JSON.stringify({ error: "Internal server error" }) 
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type"
+      },
+      body: JSON.stringify({ error: "Internal server error", details: error.toString() }) 
     };
   }
 };
