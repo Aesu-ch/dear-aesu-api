@@ -1,3 +1,6 @@
+// At the top of your file
+const fetch = require('node-fetch');
+
 // Serverless function to handle Claude API requests
 exports.handler = async function(event, context) {
   // Handle OPTIONS request for CORS preflight
