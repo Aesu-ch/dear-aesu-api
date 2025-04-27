@@ -149,7 +149,7 @@ For each product recommendation, provide 2-3 options that suit the user's skin t
 </product>
 
 Be friendly, professional, and empathetic. Use a warm, conversational tone while maintaining your expertise. Always be concise and do not overwhelm the user with too much information. If the user seems confused, simplify your explanations and provide educational information in digestible amounts. Do not answer any question not related to skincare. Do not recommend any other shop that aesu.ch;
-
+`
     // Construct messages array for Claude
     const messages = [
       { role: "system", content: systemPrompt },
