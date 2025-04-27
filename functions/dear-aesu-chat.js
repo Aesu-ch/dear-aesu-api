@@ -153,21 +153,16 @@ For each product recommendation, provide 2-3 options that suit the user's skin t
 
 Be friendly, professional, and empathetic. Use a warm, conversational tone while maintaining your expertise. Always be concise and do not overwhelm the user with too much information. If the user seems confused, simplify your explanations and provide educational information in digestible amounts. Do not answer any question not related to skincare. Do not recommend any other shop that aesu.ch.`;
 
-    // Construct messages array for Claude
-  const messages = [
-  ...(history || []),
-  { role: "user", content: message }
-];
+    // Modify the user message to include skin type and concerns context
+    const userMessageWithContext = (skinType || (skinConcerns && skinConcerns.length > 0)) 
+      ? `${message}\n\nAdditional context: ${skinType ? `Skin type: ${skinType}. ` : ''}${skinConcerns && skinConcerns.length > 0 ? `Skin concerns: ${skinConcerns.join(", ")}.` : ''}`
+      : message;
 
-    // Additional context about skin type and concerns if provided
-    if (skinType || skinConcerns) {
-      let contextMessage = "Additional context: ";
-      if (skinType) contextMessage += `Skin type: ${skinType}. `;
-      if (skinConcerns && skinConcerns.length > 0) {
-        contextMessage += `Skin concerns: ${skinConcerns.join(", ")}.`;
-      }
-      messages.push({ role: "system", content: contextMessage });
-    }
+    // Construct messages array for Claude - without any system role messages
+    const messages = [
+      ...(history || []),
+      { role: "user", content: userMessageWithContext }
+    ];
 
     console.log("Making request to Anthropic API");
     // Make request to Anthropic API
@@ -179,35 +174,35 @@ Be friendly, professional, and empathetic. Use a warm, conversational tone while
         "anthropic-version": "2023-06-01"
       },
       body: JSON.stringify({
-    model: "claude-3-7-sonnet-20250219",
-     max_tokens: 1000,
-    messages: messages,
-    system: systemPrompt,  // Add the system prompt as a top-level parameter
-    temperature: 0.7
-    })
+        model: "claude-3-7-sonnet-20250219",
+        max_tokens: 1000,
+        messages: messages,
+        system: systemPrompt,  // Add the system prompt as a top-level parameter
+        temperature: 0.7
+      })
     });
 
-   if (!response.ok) {
-  const errorData = await response.json();
-  console.error("Anthropic API error:", JSON.stringify(errorData));
-  console.error("Status code:", response.status);
-  console.error("Status text:", response.statusText);
-  return { 
-    statusCode: response.status, 
-    headers: {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type"
-    },
-    body: JSON.stringify({ 
-      error: "Error communicating with AI service",
-      details: errorData,
-      statusCode: response.status,
-      statusText: response.statusText
-    }) 
-  };
-}
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error("Anthropic API error:", JSON.stringify(errorData));
+      console.error("Status code:", response.status);
+      console.error("Status text:", response.statusText);
+      return { 
+        statusCode: response.status, 
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type"
+        },
+        body: JSON.stringify({ 
+          error: "Error communicating with AI service",
+          details: errorData,
+          statusCode: response.status,
+          statusText: response.statusText
+        }) 
+      };
+    }
 
     const responseData = await response.json();
     console.log("API response received successfully");
