@@ -187,20 +187,27 @@ Be friendly, professional, and empathetic. Use a warm, conversational tone while
       })
     });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error("Anthropic API error:", errorData);
-      return { 
-        statusCode: response.status, 
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-          "Access-Control-Allow-Headers": "Content-Type"
-        },
-        body: JSON.stringify({ error: "Error communicating with AI service" }) 
-      };
-    }
+   if (!response.ok) {
+  const errorData = await response.json();
+  console.error("Anthropic API error:", JSON.stringify(errorData));
+  console.error("Status code:", response.status);
+  console.error("Status text:", response.statusText);
+  return { 
+    statusCode: response.status, 
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type"
+    },
+    body: JSON.stringify({ 
+      error: "Error communicating with AI service",
+      details: errorData,
+      statusCode: response.status,
+      statusText: response.statusText
+    }) 
+  };
+}
 
     const responseData = await response.json();
     console.log("API response received successfully");
