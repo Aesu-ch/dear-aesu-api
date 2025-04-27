@@ -1,6 +1,19 @@
 // Serverless function to handle Claude API requests
 exports.handler = async function(event, context) {
-  // Reject non-POST requests
+  // Handle OPTIONS request for CORS preflight
+  if (event.httpMethod === "OPTIONS") {
+    return {
+      statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type"
+      },
+      body: ""
+    };
+  }
+  
+  // Reject non-POST requests (except OPTIONS which we handled above)
   if (event.httpMethod !== "POST") {
     return { statusCode: 405, body: "Method Not Allowed" };
   }
@@ -79,9 +92,10 @@ Be friendly, professional, and empathetic. Ask clarifying questions if needed to
     return {
       statusCode: 200,
       headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Headers": "Content-Type"
+         "Content-Type": "application/json",
+         "Access-Control-Allow-Origin": "*", // This allows requests from any domain
+         "Access-Control-Allow-Methods": "GET, POST, OPTIONS", // Allow these HTTP methods
+         "Access-Control-Allow-Headers": "Content-Type" // Allow these headers
       },
       body: JSON.stringify({
         message: responseData.content[0].text,
