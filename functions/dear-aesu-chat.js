@@ -205,12 +205,7 @@ exports.handler = async function(event, context) {
     Use the following format for each product when recommending specific products:
     <product>
       <n>Product Name</n>
-      <type>Product Type</type>
       <description>Brief description of benefits and why it was recommended</description>
-      <key_ingredients>Key ingredient 1, Key ingredient 2</key_ingredients>
-      <howtouse>How to use it</howtouse>
-      <integrate>How to integrate in routine</integrate>
-      <cautions>Any cautions</cautions>
       <price>$XX.XX</price>
     </product>
     
